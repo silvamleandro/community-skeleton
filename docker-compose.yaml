@@ -4,7 +4,7 @@ services:
     uvdesk:
         container_name: uvdesk_container
         # image: {IMAGE_NAME}:latest
-        build: .
+        build: ./uv_desk
         restart: unless-stopped
         tty: true
         environment:
