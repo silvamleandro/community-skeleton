@@ -1,4 +1,4 @@
-version: '3'
+version: "3.8"
 
 services:
     uvdesk:
@@ -7,6 +7,8 @@ services:
         build: ./uv_desk
         restart: unless-stopped
         tty: true
+        volumes:
+            - ./uv_desk:/var/www/uvdesk
         environment:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
@@ -17,12 +19,15 @@ services:
             - mysql_network
         depends_on: 
             - mysql
+        command: service cron start
 
     mysql:
         container_name: uvdesk_db
         image: mysql:8.0
         # command: --default-authentication-plugin=mysql_native_password
         restart: unless-stopped
+        volumes:
+            - ./data:/var/lib/mysql
         environment:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
@@ -41,7 +46,7 @@ services:
         image: nginx:1.18
         restart: unless-stopped
         ports:
-            - 8084:80
+            - 80:80
             - 443:443
         volumes:
             - ./config/nginx/conf.d:/etc/nginx/conf.d
